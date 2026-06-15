@@ -24,7 +24,7 @@ Your C++ code (Qiskit C++ SDK)
   Qmio QPU (real quantum hardware)
 ```
 
-The library handles circuit serialization, job submission via ZMQ, and QPU node allocation via Slurm — abstracting all hardware communication behind a clean C++ backend interface.
+The library handles circuit serialization, job submission via ZMQ, and QPU node allocation via Slurm abstracting all hardware communication behind a clean C++ backend interface.
 
 ---
 
@@ -41,7 +41,7 @@ The following must be available in your environment before building:
 | `nlohmann/json` | JSON parsing (fetched automatically by CMake) |
 | Slurm | HPC job scheduler (available on the cluster) |
 
-> **Note:** This project is designed to run in an HPC environment with access to the Qmio QPU. The `qmio/hpc` module must be loaded on the cluster.
+> **Note:** This project is designed to run in an HPC environment with access to the Qmio QPU.
 
 ---
 
@@ -107,15 +107,6 @@ bash run.sh
 
 This runs a full angle sweep over the Bell circuit and collects QPU results into `results.csv`.
 
----
-
-## Environment variables
-
-| Variable | Description |
-|---|---|
-| `ZMQ_SERVER` | ZMQ endpoint of the QPU server (e.g. `tcp://192.168.1.1:5555`) |
-
----
 
 ## License
 
