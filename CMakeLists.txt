@@ -100,3 +100,21 @@ foreach(TARGET bell_circuit basic_circuit)
     target_link_libraries(${TARGET} PRIVATE qmio)
     target_link_options(${TARGET} PRIVATE -Wl,-rpath,${CMAKE_CURRENT_BINARY_DIR})
 endforeach()
+
+
+# ==============================================================================
+# Install
+# ==============================================================================
+include(GNUInstallDirs)
+
+install(TARGETS qmio
+    LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
+)
+
+install(DIRECTORY include/
+    DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/qmio
+)
+
+install(TARGETS bell_circuit basic_circuit
+    RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
+)
