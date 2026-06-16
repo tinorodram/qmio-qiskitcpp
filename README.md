@@ -47,22 +47,16 @@ The following must be available in your environment before building:
 
 ## Build
 
-### 1. Load the required modules (on the cluster)
-
-```bash
-ml qmio/hpc gcccore/12.3.0 python/3.11.9
-```
-
-### 2. Configure paths
+### 1. Configure paths
 
 The build system uses overridable variables. Set them to match your environment:
 
 ```bash
-export ZMQPP_PREFIX=$HOME                          # where zmqpp is installed
+export ZMQPP_PREFIX=$HOME                        
 export QISKIT_DIST=/path/to/qiskit-ibm-runtime-c/build/qiskit_srcdir/dist/c
 ```
 
-### 3. Build the static library
+### 2. Build the static library
 
 ```bash
 make lib
@@ -74,7 +68,7 @@ Or with explicit path overrides:
 make lib ZMQPP_PREFIX=/custom/path QISKIT_DIST=/custom/qiskit/dist
 ```
 
-### 4. Build and run an example circuit
+### 3. Build and run an example circuit
 
 ```bash
 bash build.sh        # compiles bell_circuit.cpp against the static library
@@ -86,6 +80,11 @@ bash build.sh        # compiles bell_circuit.cpp against the static library
 
 ### Running a circuit
 
+First, load the modules
+
+```bash
+ml qmio/hpc gcccore/12.3.0 python/3.11.9
+```
 After building, set the ZMQ server address and run:
 
 ```bash
