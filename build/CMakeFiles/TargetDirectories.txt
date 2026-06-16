@@ -1,5 +1,0 @@
-/mnt/Q_SWAP/crodriguez/c_qiskit_qmio/project_main/build/CMakeFiles/rebuild_cache.dir
-/mnt/Q_SWAP/crodriguez/c_qiskit_qmio/project_main/build/CMakeFiles/edit_cache.dir
-/mnt/Q_SWAP/crodriguez/c_qiskit_qmio/project_main/build/CMakeFiles/basic_circuit.dir
-/mnt/Q_SWAP/crodriguez/c_qiskit_qmio/project_main/build/CMakeFiles/bell_circuit.dir
-/mnt/Q_SWAP/crodriguez/c_qiskit_qmio/project_main/build/CMakeFiles/qmio.dir
