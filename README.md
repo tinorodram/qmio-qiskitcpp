@@ -38,8 +38,8 @@ The following must be available in your environment before building:
 | `libzmq` + `zmqpp` | ZMQ communication with the QPU server |
 | `qiskit-ibm-runtime-c` | Qiskit C headers and built library |
 | `qiskit-cpp` | Qiskit C++ SDK headers |
-| `nlohmann/json` | JSON parsing (fetched automatically by CMake) |
-| Slurm | HPC job scheduler (available on the cluster) |
+| `nlohmann/json` | JSON parsing |
+| Slurm | HPC job scheduler |
 
 > **Note:** This project is designed to run in an HPC environment with access to the Qmio QPU.
 

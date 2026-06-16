@@ -5,7 +5,7 @@ STEPS=${2:-15}
 
 ml qmio/hpc  gcccore/12.3.0 python/3.11.9
  
-./circuit "$SHOTS" "$STEPS"
+./build/bell_circuit "$SHOTS" "$STEPS"
  
 
  
