@@ -32,14 +32,14 @@ The library handles circuit serialization, job submission via ZMQ, and QPU node 
 
 The following must be available in your environment before building:
 
-| Dependency | Purpose |
-|---|---|
-| `g++` with C++17 | Compiler |
-| `libzmq` + `zmqpp` | ZMQ communication with the QPU server |
-| `qiskit-ibm-runtime-c` | Qiskit C headers and built library |
-| `qiskit-cpp` | Qiskit C++ SDK headers |
-| `nlohmann/json` | JSON parsing |
-| Slurm | HPC job scheduler |
+| Dependency | Purpose | Link |
+|---|---|---|
+| `g++` with C++17 | Compiler | --- |
+| `libzmq` + `zmqpp` | ZMQ communication with the QPU server | https://github.com/zeromq/zmqpp |
+| `qiskit-ibm-runtime-c` | Qiskit C headers and built library | https://github.com/Qiskit/qiskit-ibm-runtime-c |
+| `qiskit-cpp` | Qiskit C++ SDK headers | https://github.com/Qiskit/qiskit-cpp/ |
+| `nlohmann/json` | JSON parsing | --- |
+| Slurm | HPC job scheduler | --- |
 
 > **Note:** This project is designed to run in an HPC environment with access to the Qmio QPU.
 
@@ -55,12 +55,11 @@ The build system uses overridable variables in build.sh. Set them to match your 
 export ZMQPP_PREFIX=$HOME                        
 export QISKIT_DIST=/path/to/qiskit-ibm-runtime-c/build/qiskit_srcdir/dist/c
 ```
-### 2. Build and run an example circuit
+### 2. Build 
 
 ```bash
 bash build.sh        
 ```
-
 ---
 
 ## Usage
@@ -77,7 +76,6 @@ After building, set the ZMQ server address and run:
 ```bash
 ZMQ_SERVER=tcp://<ip>:<port> ./circuit
 ```
-
 ### Example circuits
 
 Two example programs are included:
@@ -90,9 +88,7 @@ Two example programs are included:
 ```bash
 bash run.sh
 ```
-
 This runs a full angle sweep over the Bell circuit and collects QPU results into `results.csv`.
-
 
 ## License
 
