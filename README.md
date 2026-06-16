@@ -49,29 +49,16 @@ The following must be available in your environment before building:
 
 ### 1. Configure paths
 
-The build system uses overridable variables. Set them to match your environment:
+The build system uses overridable variables in build.sh. Set them to match your environment:
 
 ```bash
 export ZMQPP_PREFIX=$HOME                        
 export QISKIT_DIST=/path/to/qiskit-ibm-runtime-c/build/qiskit_srcdir/dist/c
 ```
-
-### 2. Build the static library
-
-```bash
-make lib
-```
-
-Or with explicit path overrides:
+### 2. Build and run an example circuit
 
 ```bash
-make lib ZMQPP_PREFIX=/custom/path QISKIT_DIST=/custom/qiskit/dist
-```
-
-### 3. Build and run an example circuit
-
-```bash
-bash build.sh        # compiles bell_circuit.cpp against the static library
+bash build.sh        
 ```
 
 ---
