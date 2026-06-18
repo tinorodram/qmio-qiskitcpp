@@ -107,6 +107,10 @@ endforeach()
 # ==============================================================================
 include(GNUInstallDirs)
 
+install(DIRECTORY scripts/
+    DESTINATION ${CMAKE_INSTALL_PREFIX}/scripts
+)
+
 install(TARGETS qmio
     LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
 )
