@@ -20,7 +20,7 @@ set(QISKIT_LIB      "${QISKIT_DIST}/lib")
 set(QISKIT_CPP_INC  "${BASE_DIR}/qiskit-cpp/src")
 set(NLOHMANN_INC    "${BASE_DIR}/qiskit-cpp/samples/build/_deps/json-src/include")
 
-set(SCRIPTS_DIR     "${CMAKE_CURRENT_SOURCE_DIR}/scripts/")
+set(SCRIPTS_DIR     "${CMAKE_INSTALL_PREFIX}/scripts/")
 
 set(PYTHON_ROOT "/opt/cesga/qmio/hpc/software/Compiler/gcccore/12.3.0/python/3.11.9")
 set(PYTHON_INC  "${PYTHON_ROOT}/include/python3.11")
