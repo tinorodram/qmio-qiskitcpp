@@ -76,7 +76,7 @@ bool QmioJob::cancel() {
 void QmioJob::read_results() {
     try {
 
-        //std::cerr << "[DEBUG] Raw server response:\n" << raw_json_ << "\n";
+        std::cerr << "[DEBUG] Raw server response:\n" << raw_json_ << "\n";
         auto server = nlohmann::ordered_json::parse(raw_json_);
 
         if (!server.contains("results")) {
