@@ -27,6 +27,32 @@ add_library(qmio SHARED IMPORTED)
 set_target_properties(qmio PROPERTIES
     IMPORTED_LOCATION             "${QMIO_ROOT}/lib/libqmio.so"
     INTERFACE_INCLUDE_DIRECTORIES "${QMIO_ROOT}/include/qmio;${ZMQPP_ROOT}/include;${QISKIT_ROOT}/include;${QISKITCPP_ROOT}/src;${NLOHMANN_ROOT}/include"
+set(BASE_DIR "/mnt/Q_SWAP/crodriguez/c_qiskit_qmio")
+
+set(ZMQPP_INC       "$ENV{HOME}/include")
+set(ZMQPP_LIB       "$ENV{HOME}/lib")
+
+set(QISKIT_DIST     "${BASE_DIR}/qiskit-ibm-runtime-c/build/qiskit_srcdir/dist/c")
+set(QISKIT_INC      "${QISKIT_DIST}/include")
+set(QISKIT_LIB      "${QISKIT_DIST}/lib")
+
+set(QISKIT_CPP_INC  "${BASE_DIR}/qiskit-cpp/src")
+set(NLOHMANN_INC    "${BASE_DIR}/qiskit-cpp/samples/build/_deps/json-src/include")
+
+set(SCRIPTS_DIR     "${CMAKE_INSTALL_PREFIX}/scripts/")
+
+set(PYTHON_ROOT "/opt/cesga/qmio/hpc/software/Compiler/gcccore/12.3.0/python/3.11.9")
+set(PYTHON_INC  "${PYTHON_ROOT}/include/python3.11")
+set(PYTHON_LIB  "${PYTHON_ROOT}/lib/libpython3.11.so")
+
+# ==============================================================================
+# External libraries (imported targets)
+# ==============================================================================
+
+add_library(python311 SHARED IMPORTED)
+set_target_properties(python311 PROPERTIES
+    IMPORTED_LOCATION             "${PYTHON_LIB}"
+    INTERFACE_INCLUDE_DIRECTORIES "${PYTHON_INC}"
 )
 
 add_library(zmqpp SHARED IMPORTED)
@@ -76,6 +102,21 @@ endforeach()
 # ==============================================================================
 include(GNUInstallDirs)
 
+<<<<<<< HEAD
+=======
+install(DIRECTORY scripts/
+    DESTINATION ${CMAKE_INSTALL_PREFIX}/scripts
+)
+
+install(TARGETS qmio
+    LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
+)
+
+install(DIRECTORY include/
+    DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/qmio
+)
+
+>>>>>>> 879a259de59455e2b55d202f49bcdf4f809cd7df
 install(TARGETS bell_circuit basic_circuit
     RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
 )
