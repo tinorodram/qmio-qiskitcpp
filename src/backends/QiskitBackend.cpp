@@ -209,6 +209,30 @@ std::shared_ptr<Qiskit::providers::Job> QiskitBackend::run(
     }
 }
 
+// ── run(pubs, shots) — BackendV2 override ────────────────────────────────────
+std::shared_ptr<Qiskit::providers::Job> QiskitBackend::run(
+    std::vector<Qiskit::primitives::SamplerPub>& pubs,
+    Qiskit::uint_t                               shots
+) {
+    try {
+        Qiskit::uint_t effective_shots =
+            (shots > 0) ? shots : static_cast<Qiskit::uint_t>(pubs[0].shots());
+
+        std::string qasm_str = circuit_to_qasm2(
+            const_cast<Qiskit::circuit::QuantumCircuit&>(pubs[0].circuit())
+        );
+
+        std::string json_str = _backend->run(qasm_str, effective_shots);
+
+        return std::make_shared<Qmio::QmioJob>(json_str, pubs);
+
+    } catch (const std::exception& e) {
+        std::cerr << "[QiskitBackend] Run error: " << e.what() << "\n";
+        std::vector<Qiskit::primitives::SamplerPub> empty;
+        return std::make_shared<Qmio::QmioJob>("", empty);
+    }
+}
+
 // ── run(circuit, shots) — convenience overload ───────────────────────────────
 std::shared_ptr<Qmio::QmioJob> QiskitBackend::run(
     Qiskit::circuit::QuantumCircuit& circ,
