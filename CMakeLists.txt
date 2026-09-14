@@ -22,19 +22,12 @@ foreach(VAR QMIO_ROOT ZMQPP_ROOT QISKIT_ROOT QISKITCPP_ROOT NLOHMANN_ROOT PYTHON
 endforeach()
 
 # ==============================================================================
-# External libraries (imported targets)
+# Imported targets
 # ==============================================================================
-
 add_library(qmio SHARED IMPORTED)
 set_target_properties(qmio PROPERTIES
     IMPORTED_LOCATION               "${QMIO_ROOT}/lib/libqmio.so"
     INTERFACE_INCLUDE_DIRECTORIES "${QMIO_ROOT}/include/qmio;${ZMQPP_ROOT}/include;${QISKIT_ROOT}/include;${QISKITCPP_ROOT}/src;${NLOHMANN_ROOT}/include"
-)
-
-add_library(python311 SHARED IMPORTED)
-set_target_properties(python311 PROPERTIES
-    IMPORTED_LOCATION               "${PYTHON_ROOT}/lib/libpython3.11.so"
-    INTERFACE_INCLUDE_DIRECTORIES "${PYTHON_ROOT}/include/python3.11"
 )
 
 add_library(zmqpp SHARED IMPORTED)
@@ -52,6 +45,12 @@ set_target_properties(zmq PROPERTIES
 add_library(qiskit SHARED IMPORTED)
 set_target_properties(qiskit PROPERTIES
     IMPORTED_LOCATION "${QISKIT_ROOT}/lib/libqiskit.so"
+)
+
+add_library(python311 SHARED IMPORTED)
+set_target_properties(python311 PROPERTIES
+    IMPORTED_LOCATION "${PYTHON_ROOT}/lib/libpython3.11.so"
+    INTERFACE_INCLUDE_DIRECTORIES "${PYTHON_ROOT}/include/python3.11"
 )
 
 target_link_libraries(qmio INTERFACE zmqpp zmq qiskit python311)
