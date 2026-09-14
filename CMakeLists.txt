@@ -102,8 +102,6 @@ endforeach()
 # ==============================================================================
 include(GNUInstallDirs)
 
-<<<<<<< HEAD
-=======
 install(DIRECTORY scripts/
     DESTINATION ${CMAKE_INSTALL_PREFIX}/scripts
 )
@@ -116,7 +114,6 @@ install(DIRECTORY include/
     DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/qmio
 )
 
->>>>>>> 879a259de59455e2b55d202f49bcdf4f809cd7df
 install(TARGETS bell_circuit basic_circuit
     RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
 )
