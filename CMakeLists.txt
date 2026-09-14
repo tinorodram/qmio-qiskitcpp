@@ -7,52 +7,34 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 # ==============================================================================
 # Resolve roots from module environment variables
 # ==============================================================================
-set(QMIO_ROOT    "$ENV{EBROOTQMIOMINQISKITCPP}")
-set(ZMQPP_ROOT   "$ENV{EBROOTZMQPP}")
-set(QISKIT_ROOT  "$ENV{EBROOTQISKITMINIBMMINRUNTIMEMINC}")
-set(QISKITCPP_ROOT "$ENV{EBROOTQISKITMINCPP}")
-set(NLOHMANN_ROOT "$ENV{EBROOTNLOHMANN_JSON}")
-set(PYTHON_ROOT  "$ENV{EBROOTPYTHON}")
+set(QMIO_ROOT       "$ENV{EBROOTQMIOMINQISKITCPP}")
+set(ZMQPP_ROOT      "$ENV{EBROOTZMQPP}")
+set(QISKIT_ROOT     "$ENV{EBROOTQISKITMINIBMMINRUNTIMEMINC}")
+set(QISKITCPP_ROOT  "$ENV{EBROOTQISKITMINCPP}")
+set(NLOHMANN_ROOT   "$ENV{EBROOTNLOHMANN_JSON}")
+set(PYTHON_ROOT     "$ENV{EBROOTPYTHON}")
+set(ZEROMQ_ROOT     "$ENV{EBROOTZEROMQ}")
 
-foreach(VAR QMIO_ROOT ZMQPP_ROOT QISKIT_ROOT QISKITCPP_ROOT NLOHMANN_ROOT PYTHON_ROOT)
+foreach(VAR QMIO_ROOT ZMQPP_ROOT QISKIT_ROOT QISKITCPP_ROOT NLOHMANN_ROOT PYTHON_ROOT ZEROMQ_ROOT)
     if(NOT EXISTS "${${VAR}}")
         message(FATAL_ERROR "${VAR} not found: ${${VAR}} — did you load the modules?")
     endif()
 endforeach()
 
 # ==============================================================================
-# Imported targets
-# ==============================================================================
-add_library(qmio SHARED IMPORTED)
-set_target_properties(qmio PROPERTIES
-    IMPORTED_LOCATION             "${QMIO_ROOT}/lib/libqmio.so"
-    INTERFACE_INCLUDE_DIRECTORIES "${QMIO_ROOT}/include/qmio;${ZMQPP_ROOT}/include;${QISKIT_ROOT}/include;${QISKITCPP_ROOT}/src;${NLOHMANN_ROOT}/include"
-set(BASE_DIR "/mnt/Q_SWAP/crodriguez/c_qiskit_qmio")
-
-set(ZMQPP_INC       "$ENV{HOME}/include")
-set(ZMQPP_LIB       "$ENV{HOME}/lib")
-
-set(QISKIT_DIST     "${BASE_DIR}/qiskit-ibm-runtime-c/build/qiskit_srcdir/dist/c")
-set(QISKIT_INC      "${QISKIT_DIST}/include")
-set(QISKIT_LIB      "${QISKIT_DIST}/lib")
-
-set(QISKIT_CPP_INC  "${BASE_DIR}/qiskit-cpp/src")
-set(NLOHMANN_INC    "${BASE_DIR}/qiskit-cpp/samples/build/_deps/json-src/include")
-
-set(SCRIPTS_DIR     "${CMAKE_INSTALL_PREFIX}/scripts/")
-
-set(PYTHON_ROOT "/opt/cesga/qmio/hpc/software/Compiler/gcccore/12.3.0/python/3.11.9")
-set(PYTHON_INC  "${PYTHON_ROOT}/include/python3.11")
-set(PYTHON_LIB  "${PYTHON_ROOT}/lib/libpython3.11.so")
-
-# ==============================================================================
 # External libraries (imported targets)
 # ==============================================================================
 
+add_library(qmio SHARED IMPORTED)
+set_target_properties(qmio PROPERTIES
+    IMPORTED_LOCATION               "${QMIO_ROOT}/lib/libqmio.so"
+    INTERFACE_INCLUDE_DIRECTORIES "${QMIO_ROOT}/include/qmio;${ZMQPP_ROOT}/include;${QISKIT_ROOT}/include;${QISKITCPP_ROOT}/src;${NLOHMANN_ROOT}/include"
+)
+
 add_library(python311 SHARED IMPORTED)
 set_target_properties(python311 PROPERTIES
-    IMPORTED_LOCATION             "${PYTHON_LIB}"
-    INTERFACE_INCLUDE_DIRECTORIES "${PYTHON_INC}"
+    IMPORTED_LOCATION               "${PYTHON_ROOT}/lib/libpython3.11.so"
+    INTERFACE_INCLUDE_DIRECTORIES "${PYTHON_ROOT}/include/python3.11"
 )
 
 add_library(zmqpp SHARED IMPORTED)
@@ -60,8 +42,6 @@ set_target_properties(zmqpp PROPERTIES
     IMPORTED_LOCATION  "${ZMQPP_ROOT}/lib/libzmqpp.so"
     IMPORTED_NO_SONAME TRUE
 )
-
-set(ZEROMQ_ROOT  "$ENV{EBROOTZEROMQ}")
 
 add_library(zmq SHARED IMPORTED)
 set_target_properties(zmq PROPERTIES
@@ -72,11 +52,6 @@ set_target_properties(zmq PROPERTIES
 add_library(qiskit SHARED IMPORTED)
 set_target_properties(qiskit PROPERTIES
     IMPORTED_LOCATION "${QISKIT_ROOT}/lib/libqiskit.so"
-)
-
-add_library(python311 SHARED IMPORTED)
-set_target_properties(python311 PROPERTIES
-    IMPORTED_LOCATION "${PYTHON_ROOT}/lib/libpython3.11.so"
 )
 
 target_link_libraries(qmio INTERFACE zmqpp zmq qiskit python311)
