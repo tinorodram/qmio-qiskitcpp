@@ -1,75 +1,106 @@
 cmake_minimum_required(VERSION 3.16)
-project(qmio-qiskitcpp-apps CXX)
+project(c_qiskit_qmio CXX)
 
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
-# ==============================================================================
-# Resolve roots from module environment variables
-# ==============================================================================
-set(QMIO_ROOT       "$ENV{EBROOTQMIOMINQISKITCPP}")
-set(ZMQPP_ROOT      "$ENV{EBROOTZMQPP}")
-set(QISKIT_ROOT     "$ENV{EBROOTQISKITMINIBMMINRUNTIMEMINC}")
-set(QISKITCPP_ROOT  "$ENV{EBROOTQISKITMINCPP}")
-set(NLOHMANN_ROOT   "$ENV{EBROOTNLOHMANN_JSON}")
-set(PYTHON_ROOT     "$ENV{EBROOTPYTHON}")
-set(ZEROMQ_ROOT     "$ENV{EBROOTZEROMQ}")
-
-foreach(VAR QMIO_ROOT ZMQPP_ROOT QISKIT_ROOT QISKITCPP_ROOT NLOHMANN_ROOT PYTHON_ROOT ZEROMQ_ROOT)
-    if(NOT EXISTS "${${VAR}}")
-        message(FATAL_ERROR "${VAR} not found: ${${VAR}} — did you load the modules?")
-    endif()
-endforeach()
 
 # ==============================================================================
-# Imported targets
+# External paths
 # ==============================================================================
-add_library(qmio SHARED IMPORTED)
-set_target_properties(qmio PROPERTIES
-    IMPORTED_LOCATION               "${QMIO_ROOT}/lib/libqmio.so"
-    INTERFACE_INCLUDE_DIRECTORIES "${QMIO_ROOT}/include/qmio;${ZMQPP_ROOT}/include;${QISKIT_ROOT}/include;${QISKITCPP_ROOT}/src;${NLOHMANN_ROOT}/include"
+set(BASE_DIR "/mnt/Q_SWAP/crodriguez/c_qiskit_qmio")
+
+set(ZMQPP_INC       "$ENV{HOME}/include")
+set(ZMQPP_LIB       "$ENV{HOME}/lib")
+
+set(QISKIT_DIST     "${BASE_DIR}/qiskit-ibm-runtime-c/build/qiskit_srcdir/dist/c")
+set(QISKIT_INC      "${QISKIT_DIST}/include")
+set(QISKIT_LIB      "${QISKIT_DIST}/lib")
+
+set(QISKIT_CPP_INC  "${BASE_DIR}/qiskit-cpp/src")
+set(NLOHMANN_INC    "${BASE_DIR}/qiskit-cpp/samples/build/_deps/json-src/include")
+
+set(SCRIPTS_DIR     "${CMAKE_INSTALL_PREFIX}/scripts/")
+
+set(PYTHON_ROOT "/opt/cesga/qmio/hpc/software/Compiler/gcccore/12.3.0/python/3.11.9")
+set(PYTHON_INC  "${PYTHON_ROOT}/include/python3.11")
+set(PYTHON_LIB  "${PYTHON_ROOT}/lib/libpython3.11.so")
+
+# ==============================================================================
+# External libraries (imported targets)
+# ==============================================================================
+
+add_library(python311 SHARED IMPORTED)
+set_target_properties(python311 PROPERTIES
+    IMPORTED_LOCATION             "${PYTHON_LIB}"
+    INTERFACE_INCLUDE_DIRECTORIES "${PYTHON_INC}"
 )
 
 add_library(zmqpp SHARED IMPORTED)
 set_target_properties(zmqpp PROPERTIES
-    IMPORTED_LOCATION  "${ZMQPP_ROOT}/lib/libzmqpp.so"
-    IMPORTED_NO_SONAME TRUE
+    IMPORTED_LOCATION             "${ZMQPP_LIB}/libzmqpp.so.4"
+    INTERFACE_INCLUDE_DIRECTORIES "${ZMQPP_INC}"
 )
 
 add_library(zmq SHARED IMPORTED)
 set_target_properties(zmq PROPERTIES
-    IMPORTED_LOCATION  "${ZEROMQ_ROOT}/lib/libzmq.so"
-    IMPORTED_NO_SONAME TRUE
+    IMPORTED_LOCATION "${ZMQPP_LIB}/libzmq.so"
 )
 
 add_library(qiskit SHARED IMPORTED)
 set_target_properties(qiskit PROPERTIES
-    IMPORTED_LOCATION "${QISKIT_ROOT}/lib/libqiskit.so"
+    IMPORTED_LOCATION             "${QISKIT_LIB}/libqiskit.so"
+    INTERFACE_INCLUDE_DIRECTORIES "${QISKIT_INC}"
 )
 
-add_library(python311 SHARED IMPORTED)
-set_target_properties(python311 PROPERTIES
-    IMPORTED_LOCATION "${PYTHON_ROOT}/lib/libpython3.11.so"
-    INTERFACE_INCLUDE_DIRECTORIES "${PYTHON_ROOT}/include/python3.11"
+# ==============================================================================
+# qmio shared library
+# ==============================================================================
+add_library(qmio SHARED
+    src/utils/pickle_serializer.cpp
+    src/utils/pickle_deserializer.cpp
+    src/utils/errors.cpp
+    src/utils/circuit_validator.cpp
+    src/utils/logger.cpp
+    src/clients/ZMQClient.cpp
+    src/clients/SlurmClient.cpp
+    src/backends/QPUBackend.cpp
+    src/backends/QmioJob.cpp
+    src/backends/QiskitBackend.cpp
 )
 
-target_link_libraries(qmio INTERFACE zmqpp zmq qiskit python311)
+target_include_directories(qmio
+    PUBLIC  "${CMAKE_CURRENT_SOURCE_DIR}/include"
+            "${QISKIT_CPP_INC}"
+            "${NLOHMANN_INC}"
+            "${QISKIT_INC}"
+            "${ZMQPP_INC}"
+)
+
+target_compile_definitions(qmio
+    PRIVATE SCRIPTS_DIR="${SCRIPTS_DIR}"
+)
+
+target_link_libraries(qmio
+    PUBLIC zmqpp zmq qiskit python311
+)
+
+target_link_options(qmio PRIVATE
+    -Wl,--allow-multiple-definition
+    -Wl,-rpath,${ZMQPP_LIB}
+    -Wl,-rpath,${QISKIT_LIB}
+    -Wl,-rpath,${Python_ROOT_DIR}/lib
+)
 
 # ==============================================================================
 # Executables
 # ==============================================================================
 foreach(TARGET bell_circuit basic_circuit)
-    add_executable(${TARGET} examples/${TARGET}.cpp)
+    add_executable(${TARGET} ${TARGET}.cpp)
     target_link_libraries(${TARGET} PRIVATE qmio)
-    target_link_options(${TARGET} PRIVATE
-        -Wl,--allow-multiple-definition
-        -Wl,-rpath,${QMIO_ROOT}/lib
-        -Wl,-rpath,${ZMQPP_ROOT}/lib
-        -Wl,-rpath,${ZEROMQ_ROOT}/lib
-        -Wl,-rpath,${QISKIT_ROOT}/lib
-        -Wl,-rpath,${PYTHON_ROOT}/lib
-    )
+    target_link_options(${TARGET} PRIVATE -Wl,-rpath,${CMAKE_CURRENT_BINARY_DIR})
 endforeach()
+
 
 # ==============================================================================
 # Install
