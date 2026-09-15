@@ -95,11 +95,11 @@ target_link_options(qmio PRIVATE
 # ==============================================================================
 # Executables
 # ==============================================================================
-foreach(TARGET bell_circuit basic_circuit)
-    add_executable(${TARGET} ${TARGET}.cpp)
-    target_link_libraries(${TARGET} PRIVATE qmio)
-    target_link_options(${TARGET} PRIVATE -Wl,-rpath,${CMAKE_CURRENT_BINARY_DIR})
-endforeach()
+#foreach(TARGET bell_circuit basic_circuit)
+#    add_executable(${TARGET} ${TARGET}.cpp)
+#    target_link_libraries(${TARGET} PRIVATE qmio)
+#    target_link_options(${TARGET} PRIVATE -Wl,-rpath,${CMAKE_CURRENT_BINARY_DIR})
+#endforeach()
 
 
 # ==============================================================================
@@ -119,6 +119,6 @@ install(DIRECTORY include/
     DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/qmio
 )
 
-install(TARGETS bell_circuit basic_circuit
-    RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
-)
+#install(TARGETS bell_circuit basic_circuit
+#    RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
+#)
